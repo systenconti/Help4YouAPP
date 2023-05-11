@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Help4You{% endblock %}
+
+{% block content %}
+<h1>Welcome to Help4You, We're here to help!</h1>
+<h3>Type in your address and choose service type to get the best assistance!</h3>
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group mb-4">
+        <label for="first_name">Address:</label>
+        <input class="form-control" type="text" id="first_name" name="first_name" required>
+    </div>
+    <div class="form-group mb-4">
+        <label for="last_name">Service:</label>
+        <input class="form-control" type="text" id="last_name" name="last_name" required>
+    </div>
+    <div class="form-group mb-4">
+        <label for="email">Email:</label>
+        <input class="form-control" type="email" id="email" name="email" required>
+    </div>
+    <div class="form-group mb-4">
+        <label for="mobile">Mobile Number:</label>
+        <input class="form-control" type="tel" id="mobile" name="mobile" required>
+    </div>
+    <div class="form-group mb-4">
+        <label for="profession">Specialist:</label>
+        <input class="form-control" type="text" id="profession" name="profession" required>
+    </div>
+    <div class="form-group mb-4">
+        <label for="service">Service:</label>
+        <input class="form-control" type="text" id="service" name="service" required>
+    </div>
+    <button class="btn btn-secondary mb-4" type="submit">Submit</button>
+</form>
+{% endblock %}
