@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Worker, Service, OrderedService
+from .models import Worker, Service, OrderedService, Profession
 
-# Register your models here.
 admin.site.register(Worker)
+admin.site.register(Profession)
 admin.site.register(Service)
 admin.site.register(OrderedService)

@@ -2,9 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Profession(models.Model):
+    profession = models.CharField(max_length=40)
+
+    def __str__(self) -> str:
+        return self.profession
+
+
 class Worker(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profession = models.CharField(max_length=40)
+    profession = models.ForeignKey(Profession, on_delete=models.CASCADE)
     work_starttime = models.TimeField()
     work_endtime = models.TimeField()
 
@@ -22,9 +29,10 @@ class Worker(models.Model):
 
 
 class Service(models.Model):
+    profession = models.ForeignKey(Profession, on_delete=models.CASCADE)
     service = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
-    cost = models.IntegerField()
+    cost = models.SmallIntegerField()
 
     def __str__(self) -> str:
         return self.service
@@ -34,6 +42,9 @@ class Service(models.Model):
 
     def get_cost(self):
         return self.cost
+
+    def get_profession(self):
+        return self.profession
 
 
 class OrderedService(models.Model):

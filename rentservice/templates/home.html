@@ -25,11 +25,17 @@
     </div>
     <div class="form-group mb-4">
         <label for="profession">Specialist:</label>
-        <input class="form-control" type="text" id="profession" name="profession" required>
+        <select class="form-control" id="profession" name="profession" required>
+            <option value="" disabled selected>Select a specialist...</option>
+            <option value="profession.id">Plumber</option>
+        </select>
     </div>
     <div class="form-group mb-4">
         <label for="service">Service:</label>
-        <input class="form-control" type="text" id="service" name="service" required>
+        <select class="form-control" id="service" name="service" required>
+            <option value="" disabled selected>Select a service...</option>
+            <option value="service.id">Check the sink</option>
+        </select>
     </div>
     <button class="btn btn-secondary mb-4" type="submit">Submit</button>
 </form>
