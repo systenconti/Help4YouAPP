@@ -45,8 +45,9 @@ class PartialOrderedServiceForm(forms.ModelForm):
                 request,
                 """
                 There was a problem with settling your service.
-                           Either our specialists are unavailable for prefered date or you chose out of range working hours.
+                           Either our specialists are unavailable for preferred date or you chose out of range working hours.
                            Remember that we're available from 8 to 22.
+                           Choose another date.
                             """,
             )
 
