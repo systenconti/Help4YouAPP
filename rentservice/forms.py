@@ -1,6 +1,8 @@
 from django import forms
 from .models import OrderedService, Worker
+from django.contrib import messages
 from datetime import datetime
+import random
 
 
 class PartialOrderedServiceForm(forms.ModelForm):
@@ -10,16 +12,43 @@ class PartialOrderedServiceForm(forms.ModelForm):
         model = OrderedService
         exclude = ["order_date", "worker"]
 
-    def save(self, commit=True):
+    def save(self, request=None, commit=True):
         profession = self.cleaned_data.get("profession")
-        worker = Worker.objects.filter(profession=profession).first()
+        selected_date = self.cleaned_data.get("service_date")
+        selected_time = selected_date.time()
+        workers = Worker.objects.filter(profession=profession)
+        available_workers = []
 
-        if worker:
-            self.instance.worker = worker
+        for worker in workers:
+            already_ordered_service = OrderedService.objects.filter(
+                worker=worker, service_date=selected_date
+            )
+            if already_ordered_service or (
+                selected_time > worker.work_endtime
+                or selected_time < worker.work_starttime
+            ):
+                continue
+            else:
+                if worker.work_starttime <= selected_time < worker.work_endtime:
+                    available_workers.append(worker)
 
-        if commit:
+        if available_workers:
+            worker = self.choose_worker(available_workers)
             ordered_service = super().save(commit=False)
+            ordered_service.worker = worker
             ordered_service.order_date = datetime.now()
-            ordered_service.save()
+            if commit:
+                ordered_service.save()
+            return ordered_service
+        else:
+            messages.error(
+                request,
+                """
+                There was a problem with settling your service.
+                           Either our specialists are unavailable for prefered date or you chose out of range working hours.
+                           Remember that we're available from 8 to 22.
+                            """,
+            )
 
-        return self.instance
+    def choose_worker(self, workers):
+        return random.choice(workers)

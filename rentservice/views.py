@@ -10,11 +10,11 @@ def home_view(request):
     if request.method == "POST":
         form = PartialOrderedServiceForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(request=request)
             print("form was submitted")
             return redirect("home")
     else:
-            form = PartialOrderedServiceForm()
+        form = PartialOrderedServiceForm()
     context = {"professions": professions, "form": form}
     return render(request, "home.html", context)
 
