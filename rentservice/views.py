@@ -1,11 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Profession, Worker, OrderedService, Service
 from django.http import JsonResponse
+from .forms import PartialOrderedServiceForm
+from datetime import datetime
 
 
 def home_view(request):
     professions = Profession.objects.all()
-    context = {"professions": professions}
+    if request.method == "POST":
+        form = PartialOrderedServiceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print("form was submitted")
+            return redirect("home")
+    else:
+            form = PartialOrderedServiceForm()
+    context = {"professions": professions, "form": form}
     return render(request, "home.html", context)
 
 
