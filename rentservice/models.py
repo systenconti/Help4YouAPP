@@ -56,6 +56,7 @@ class OrderedService(models.Model):
     client_address = models.CharField()
     order_date = models.DateTimeField()
     service_date = models.DateTimeField()
+    confirmed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"{self.service} {self.worker}"

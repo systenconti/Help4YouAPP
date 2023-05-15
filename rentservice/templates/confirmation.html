@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Confirmation</h1>
+
+<h3>Confirm your visit:</h3>
+<p>Address: {{ client_address }}</p>
+<p>Full Name: {{ client_fullname }}</p>
+<p>Email: {{ client_email }}</p>
+<p>Mobile Number: {{ client_mobile }}</p>
+<p>Service Date: {{ service_date }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" name="confirm" value="Confirm">
+    <input type="submit" name="dismiss" value="Dismiss">
+</form>
+{% endblock %}

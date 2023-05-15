@@ -10,7 +10,7 @@ class PartialOrderedServiceForm(forms.ModelForm):
 
     class Meta:
         model = OrderedService
-        exclude = ["order_date", "worker"]
+        exclude = ["order_date", "worker", "confirmed"]
 
     def save(self, request=None, commit=True):
         profession = self.cleaned_data.get("profession")
@@ -21,7 +21,7 @@ class PartialOrderedServiceForm(forms.ModelForm):
 
         for worker in workers:
             already_ordered_service = OrderedService.objects.filter(
-                worker=worker, service_date=selected_date
+                worker=worker, service_date=selected_date, confirmed=True
             )
             if already_ordered_service or (
                 selected_time > worker.work_endtime
@@ -37,6 +37,7 @@ class PartialOrderedServiceForm(forms.ModelForm):
             ordered_service = super().save(commit=False)
             ordered_service.worker = worker
             ordered_service.order_date = datetime.now()
+            ordered_service.confirmed = False
             if commit:
                 ordered_service.save()
             return ordered_service

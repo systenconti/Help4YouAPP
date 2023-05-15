@@ -11,4 +11,7 @@ urlpatterns = [
     path("services/", views.services_view, name="services"),
     path("about/", views.about_view, name="about"),
     path("contact/", views.contact_view, name="contact"),
+    path("confirm/", views.confirm_view, name="confirm"),
+    path("confirm/success/", views.success_view, name="success"),
+    path("confirm/dismiss/", views.dismiss_view, name="dismiss"),
 ]
