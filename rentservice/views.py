@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Profession, Worker, OrderedService, Service
 from django.http import JsonResponse
 from .forms import PartialOrderedServiceForm
@@ -35,17 +35,19 @@ def confirm_view(request):
     client_email = ordered_service.client_email
     client_mobile = ordered_service.client_mobile
     service_date = ordered_service.service_date
+    service = ordered_service.service
+    worker = get_object_or_404(Worker, orderedservice=ordered_service)
 
     if request.method == "POST":
         confirmed = request.POST.get("confirm")
-        if confirmed == "yes":
+        if confirmed:
             ordered_service.confirmed = True
             ordered_service.save()
 
             del request.session["form_data"]
             return redirect("success")
 
-        elif confirmed == "no":
+        else:
             del request.session["form_data"]
             return redirect("dismiss")
     context = {
@@ -55,6 +57,8 @@ def confirm_view(request):
         "client_email": client_email,
         "client_mobile": client_mobile,
         "service_date": service_date,
+        "worker": worker,
+        "service": service,
     }
     return render(request, "confirmation.html", context)
 

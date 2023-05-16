@@ -3,16 +3,43 @@
 {% block content %}
 <h1>Confirmation</h1>
 
-<h3>Confirm your visit:</h3>
-<p>Address: {{ client_address }}</p>
-<p>Full Name: {{ client_fullname }}</p>
-<p>Email: {{ client_email }}</p>
-<p>Mobile Number: {{ client_mobile }}</p>
-<p>Service Date: {{ service_date }}</p>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>Address</th>
+            <td>{{ client_address }}</td>
+        </tr>
+        <tr>
+            <th>Full Name</th>
+            <td>{{ client_fullname }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ client_email }}</td>
+        </tr>
+        <tr>
+            <th>Mobile Number</th>
+            <td>{{ client_mobile }}</td>
+        </tr>
+        <tr>
+            <th>Service Date</th>
+            <td>{{ service_date }}</td>
+        </tr>
+        <tr>
+            <th>Worker</th>
+            <td>{{ worker.user.first_name }} {{ worker.user.last_name }}</td>
+        </tr>
+        <tr>
+            <th>Service</th>
+            <td>{{ service }}</td>
+        </tr>
+    </tbody>
+</table>
 
+<p>Do you confirm?</p>
 <form method="POST">
     {% csrf_token %}
-    <input type="submit" name="confirm" value="Confirm">
-    <input type="submit" name="dismiss" value="Dismiss">
+    <input type="submit" name="confirm" value="Confirm" class="btn btn-primary">
+    <input type="submit" name="dismiss" value="Dismiss" class="btn btn-secondary">
 </form>
 {% endblock %}
