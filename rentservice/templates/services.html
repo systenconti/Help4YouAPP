@@ -1,5 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Our services in progress...</h1>
+<h1>Our services</h1>
+<h2>Here's the list of services we provide:</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th colspan="2" style="text-align: center;">Services:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Name:</td>
+            <td>Description:</td>
+        </tr>
+        {% for service in services %}
+        <tr>
+            <td>{{ service.service }}</td>
+            <td>{{ service.description }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

@@ -114,7 +114,8 @@ def contact_view(request):
 
 
 def services_view(request):
-    return render(request, "services.html")
+    services = Service.objects.all()
+    return render(request, "services.html", {"services": services})
 
 
 def success_view(request):
