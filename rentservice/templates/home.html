@@ -46,9 +46,9 @@
         <input class="form-control" type="datetime-local" id="datetime" name="service_date" required>
     </div>
     <button class="btn btn-secondary mb-4" type="submit">Submit</button>
-    {% if messages %}
+    {% if form.non_field_errors %}
     <div class="alert alert-warning">
-        {% for message in messages %}
+        {% for message in form.non_field_errors %}
         {{message}}
         {% endfor %}
     </div>

@@ -1,6 +1,6 @@
 from django import forms
 from .models import OrderedService, Worker
-from django.contrib import messages
+from django.core.exceptions import ValidationError
 from datetime import datetime
 import random
 
@@ -42,14 +42,13 @@ class PartialOrderedServiceForm(forms.ModelForm):
                 ordered_service.save()
             return ordered_service
         else:
-            messages.error(
-                request,
+            raise ValidationError(
                 """
                 There was a problem with settling your service.
-                           Either our specialists are unavailable for preferred date or you chose out of range working hours.
-                           Remember that we're available from 8 to 22.
-                           Choose another date.
-                            """,
+                Either our specialists are unavailable for the preferred date or you chose out-of-range working hours.
+                Remember that we're available from 8 to 22.
+                Please choose another date.
+                """
             )
 
     def choose_worker(self, workers):

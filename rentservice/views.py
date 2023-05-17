@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .forms import PartialOrderedServiceForm
 from django.core import serializers
 from django.core.mail import EmailMessage
+from django.core.exceptions import ValidationError
 
 
 def home_view(request):
@@ -11,10 +12,13 @@ def home_view(request):
     if request.method == "POST":
         form = PartialOrderedServiceForm(request.POST)
         if form.is_valid():
-            form.save(request=request)
-            form_data = serializers.serialize("json", [form.instance])
-            request.session["form_data"] = form_data
-            return redirect("confirm")
+            try:
+                form.save(request=request)
+                form_data = serializers.serialize("json", [form.instance])
+                request.session["form_data"] = form_data
+                return redirect("confirm")
+            except ValidationError as e:
+                form.add_error(None, e.message)
     else:
         form = PartialOrderedServiceForm()
     context = {"professions": professions, "form": form}
