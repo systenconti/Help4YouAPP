@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Profession, Worker, OrderedService, Service
+from .models import Profession, Worker, Service
 from django.http import JsonResponse
 from .forms import PartialOrderedServiceForm
-from datetime import datetime
 from django.core import serializers
+from django.core.mail import EmailMessage
 
 
 def home_view(request):
@@ -37,12 +37,36 @@ def confirm_view(request):
     service_date = ordered_service.service_date
     service = ordered_service.service
     worker = get_object_or_404(Worker, orderedservice=ordered_service)
+    cost = ordered_service.service.cost
 
     if request.method == "POST":
         confirmed = request.POST.get("confirm")
         if confirmed:
             ordered_service.confirmed = True
             ordered_service.save()
+
+            message_body = f"""
+            Your visit details below:
+            Address: {client_address}
+            Full Name: {client_fullname}
+            Email: {client_email}
+            Mobile: {client_mobile}
+            Service date: {service_date}
+            Worker: {worker.user.first_name} {worker.user.last_name}
+            Service: {service}
+            Cost: {cost}
+
+            Thanks for trusting us and see you on the job!
+            
+            Yours sincerely,
+            Help4You Team
+            """
+            email_message = EmailMessage(
+                "Your service - Help4You",
+                message_body,
+                to=[client_email, worker.user.email],
+            )
+            email_message.send()
 
             del request.session["form_data"]
             return redirect("success")
@@ -59,6 +83,7 @@ def confirm_view(request):
         "service_date": service_date,
         "worker": worker,
         "service": service,
+        "cost": cost,
     }
     return render(request, "confirmation.html", context)
 
@@ -66,9 +91,17 @@ def confirm_view(request):
 def get_services_view(request, profession_id):
     services = Service.objects.filter(profession_id=profession_id).order_by("service")
     services_list = [
-        {"id": service.id, "service": service.service} for service in services
+        {
+            "id": service.id,
+            "service": service.service,
+            "description": service.description,
+        }
+        for service in services
     ]
-    data = {"services": services_list}
+    data = {
+        "services": services_list,
+        "all_services": list(services.values()),
+    }
     return JsonResponse(data)
 
 

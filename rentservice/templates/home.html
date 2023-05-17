@@ -39,6 +39,9 @@
         </select>
     </div>
     <div class="form-group mb-4">
+        <p id="service_description"></p>
+    </div>
+    <div class="form-group mb-4">
         <label for="datetime">Select service Date and Time:</label>
         <input class="form-control" type="datetime-local" id="datetime" name="service_date" required>
     </div>
@@ -66,29 +69,38 @@
                     $("#service").empty();
                     $("#service").append('<option value="" disabled selected>Select a service...</option>');
                     $.each(data.services, function (index, service) {
-                        $("#service").append('<option value="' + service.id + '">' + service.service + '</option>');
+                        $("#service").append('<option value="' + service.id + '" data-description="' + service.description + '">' + service.service + '</option>');
                     });
                 }
             });
         } else {
             $("#service").empty();
             $("#service").append('<option value="" disabled selected>Select a service...</option>');
+            $("#service_description").text("");
         }
     }
 
     $(document).ready(function () {
         populate_services();
+
         $("#profession").change(function () {
             populate_services();
         });
-    });
-    const dateTimePicker = document.getElementById('datetime');
 
-    dateTimePicker.addEventListener('change', function () {
-        const selectedDate = new Date(dateTimePicker.value);
-        selectedDate.setMinutes(0);
-        const adjustedDate = new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000));
-        dateTimePicker.value = adjustedDate.toISOString().slice(0, 16);
+        $("#service").change(function () {
+            var selectedService = $(this).find(':selected');
+            var description = selectedService.data('description');
+            $("#service_description").text(description);
+        });
+
+        const dateTimePicker = document.getElementById('datetime');
+
+        dateTimePicker.addEventListener('change', function () {
+            const selectedDate = new Date(dateTimePicker.value);
+            selectedDate.setMinutes(0);
+            const adjustedDate = new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000));
+            dateTimePicker.value = adjustedDate.toISOString().slice(0, 16);
+        });
     });
 </script>
 {% endblock %}
